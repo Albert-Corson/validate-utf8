@@ -4,21 +4,37 @@ const isValid = require('utf-8-validate');
 const isBinaryFileSync = require('isbinaryfile').isBinaryFileSync;
 
 class ValidateUTF8 {
-    static async isValid(path) {
+    static loadIgnore(pathToCheck) {
+        let toIgnore = [];
+        const data = fs.readFileSync(pathMod.resolve(process.cwd(), '.utf8-ignore'), 'utf-8').split('\n');
+
+        for (const str of data) {
+            if (str.length > 0) {
+                toIgnore.push(pathMod.resolve(process.cwd(), pathToCheck, str));
+            }
+        }
+        return toIgnore;
+    }
+    static async isValid(path, toIgnore) {
         const pathStat = await fs.promises.lstat(path);
 
         if (pathStat.isDirectory()) {
-            await this.isValidDir(path);
+            this.isValidDir(path, toIgnore);
         } else {
             await this.isValidFile(path);
         }
     }
 
-    static async isValidDir(path) {
+    static async isValidDir(path, toIgnore) {
         const dirs = await fs.promises.readdir(path);
 
         for (const dir of dirs) {
-            this.isValid(pathMod.resolve(path, dir));
+            const toCheck = pathMod.resolve(path, dir);
+
+            if (!toIgnore || !toIgnore.includes(toCheck)) {
+                // 'await' needed to prevent a error raised when reading too many files a once
+                await this.isValid(toCheck);
+            }
         }
     }
 
