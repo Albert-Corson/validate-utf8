@@ -1,0 +1,19 @@
+{
+  "name": "utf8-verify",
+  "version": "1.0.0",
+  "description": "Checks if a file/directory only contains UTF-8 characters",
+  "author": "Albert-Corson",
+  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Albert-Corson/encoding-convert.git"
+  },
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "dependencies": {
+    "isbinaryfile": "^4.0.2",
+    "utf-8-validate": "^5.0.2"
+  }
+}
