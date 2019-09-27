@@ -15,6 +15,7 @@ class ValidateUTF8 {
         }
         return toIgnore;
     }
+
     static async isValid(path, toIgnore) {
         const pathStat = await fs.promises.lstat(path);
 
@@ -33,7 +34,7 @@ class ValidateUTF8 {
 
             if (!toIgnore || !toIgnore.includes(toCheck)) {
                 // 'await' needed to prevent a error raised when reading too many files a once
-                await this.isValid(toCheck);
+                await this.isValid(toCheck, toIgnore);
             }
         }
     }
